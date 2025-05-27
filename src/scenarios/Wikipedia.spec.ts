@@ -30,7 +30,11 @@ test('Realizar uma busca e verificar se os resultados estão corretos', async ({
   expect(content?.length).toBeGreaterThan(100);
 });
 
-test('Selecionar idioma Inglês e verificar redirecionamento', async ({ page }: { page: Page }) => {
+test('Selecionar idioma Inglês e verificar redirecionamento', async ({
+  page
+}: {
+  page: Page;
+}) => {
   // Acessa a página inicial da Wikipedia
   await page.goto('https://www.wikipedia.org/');
 
@@ -46,5 +50,5 @@ test('Selecionar idioma Inglês e verificar redirecionamento', async ({ page }: 
 
   // Verifica se o título principal da página também contém "Wikipedia", confirmando o idioma
   const mainHeading = await page.locator('h1').first().textContent();
-  expect(mainHeading).toContain('Wikipedia');
+  expect(mainHeading?.trim()).toBe('Main Page');
 });
