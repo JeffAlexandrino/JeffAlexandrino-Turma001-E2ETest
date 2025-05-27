@@ -30,21 +30,30 @@ test('Realizar uma busca e verificar se os resultados estão corretos', async ({
   expect(content?.length).toBeGreaterThan(100);
 });
 
-test('Selecionar idioma Inglês e verificar redirecionamento', async ({ page }: { page: Page }) => {
-  // Acessa a página inicial da Wikipedia
-  await page.goto('https://www.wikipedia.org/');
+test('Selecionar idioma Inglês e verificar redirecionamento', async ({
+  page
+}: {
+  page: Page;
+}) => {
+  await test.step('Acessar a página inicial da Wikipedia', async () => {
+    await page.goto('https://www.wikipedia.org/');
+  });
 
-  // Clica no link que leva à Wikipedia em inglês
-  await page.click('a[id="js-link-box-en"]');
+  await test.step('Clicar no link da Wikipedia em inglês', async () => {
+    await page.click('a[id="js-link-box-en"]');
+  });
 
-  // Garante que a URL foi redirecionada corretamente para o domínio em inglês
-  await expect(page).toHaveURL(/en\.wikipedia\.org/);
+  await test.step('Verificar se a URL foi redirecionada corretamente', async () => {
+    await expect(page).toHaveURL(/en\.wikipedia\.org/);
+  });
 
-  // Verifica se o título da aba contém a palavra "Wikipedia"
-  const title = await page.title();
-  expect(title).toContain('Wikipedia');
+  await test.step('Verificar se o título da aba contém "Wikipedia"', async () => {
+    const title = await page.title();
+    expect(title).toContain('Wikipedia');
+  });
 
-  // Verifica se o título principal da página também contém "Wikipedia", confirmando o idioma
-  const mainHeading = await page.locator('h1').first().textContent();
-  expect(mainHeading).toContain('Wikipedia');
+  await test.step('Verificar se o título principal da página é "Main Page"', async () => {
+    const mainHeading = await page.locator('h1').first().textContent();
+    expect(mainHeading).toContain('Main Page');
+  });
 });
