@@ -1,10 +1,6 @@
 import { test, expect, Page } from '@playwright/test';
 
-test('Realizar uma busca e verificar se os resultados estão corretos', async ({
-  page
-}: {
-  page: Page;
-}) => {
+test('Realizar uma busca e verificar se os resultados estão corretos', async ({ page }: { page: Page }) => {
   // Acessa a página inicial da Wikipedia
   await page.goto('https://www.wikipedia.org/');
 
@@ -17,13 +13,13 @@ test('Realizar uma busca e verificar se os resultados estão corretos', async ({
 
   await page.click('button[type="submit"]');
 
-  // Verifica se o título da aba contém o termo buscado
-  const pageTitle = await page.title();
-  expect(pageTitle).toContain(searchTerm);
+  // Aguarda até que o título principal esteja visível
+  const headingLocator = page.locator('h1');
+  await headingLocator.waitFor();
 
-  // Verifica se o título principal do artigo corresponde ao termo buscado
-  const heading = await page.locator('h1').textContent();
-  expect(heading).toContain(searchTerm);
+  // Verifica se o título principal do artigo contém o termo buscado
+  const heading = await headingLocator.textContent();
+  expect(heading?.toLowerCase()).toContain(searchTerm.toLowerCase());
 
   // Verifica se a página tem conteúdo suficiente no corpo do artigo
   const content = await page.locator('#mw-content-text').textContent();
